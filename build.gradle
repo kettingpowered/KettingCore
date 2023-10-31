@@ -1,0 +1,34 @@
+plugins {
+    id 'java-library'
+    id 'net.nemerosa.versioning' version '3.0.0'
+}
+
+group = 'org.kettingpowered'
+
+allprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'net.nemerosa.versioning'
+
+    repositories {
+        maven {
+            name 'c0d3m4513r'
+            url 'https://nexus.c0d3m4513r.com/repository/Magma/'
+        }
+        maven {
+            name 'MinecraftForge'
+            url 'https://maven.minecraftforge.net/'
+        }
+    }
+
+    dependencies {
+        implementation 'org.jetbrains:annotations:24.0.0'
+    }
+}
+
+dependencies {
+    api 'org.slf4j:slf4j-api:1.8.0-beta4'
+    implementation project(':common')
+    implementation project(':forge')
+    implementation 'org.spongepowered:mixin:0.8.5'
+    implementation 'org.reflections:reflections:0.10.2'
+}
