@@ -29,8 +29,8 @@ dependencies {
     api 'org.slf4j:slf4j-api:1.8.0-beta4'
     implementation project(':common')
     implementation project(':forge')
+    implementation project(':forge:1-20-2')
     implementation 'org.spongepowered:mixin:0.8.5'
-    implementation 'org.reflections:reflections:0.10.2'
 }
 
 jar {
