@@ -1,12 +1,10 @@
 package org.kettingpowered.ketting.core;
 
 import org.jetbrains.annotations.NotNull;
-import org.kettingpowered.adapter.ForgeAdapter;
+import org.kettingpowered.ketting.adapter.ForgeAdapter;
 import org.kettingpowered.ketting.core.injectprotect.InjectProtect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.kettingpowered.adapters.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +40,11 @@ public final class Ketting {
 
     public Ketting() {
         LOGGER.info("KettingCore " + coreVersion + " for Minecraft " + mcVersion + " initializing...");
-        collectAdapters();
-
         InjectProtect.init();
+    }
+
+    public void registerAdapter(ForgeAdapter adapter) {
+        AVAILABLE_ADAPTERS.add(adapter);
     }
 
     public @NotNull ForgeAdapter getAdapter() {
@@ -56,9 +56,5 @@ public final class Ketting {
             throw new RuntimeException("Could not find an adapter for Minecraft version " + mcVersion);
 
         return adapter;
-    }
-
-    private void collectAdapters() {
-        AVAILABLE_ADAPTERS.add(new Forge_1_20_2_Adapter());
     }
 }

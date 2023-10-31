@@ -1,4 +1,4 @@
-package org.kettingpowered.adapter;
+package org.kettingpowered.ketting.adapter;
 
 import org.jetbrains.annotations.Nullable;
 
