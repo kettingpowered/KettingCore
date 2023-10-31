@@ -14,20 +14,50 @@ import java.util.Map;
 
 public final class Ketting {
 
-    public static Logger LOGGER = LoggerFactory.getLogger(Ketting.class);
-
-    private static final Map<String, ForgeAdapter> AVAILABLE_ADAPTERS = new HashMap<>();
-
+    public static final Logger LOGGER = LoggerFactory.getLogger(Ketting.class);
+    private static final String coreVersion = Ketting.class.getPackage().getImplementationVersion();
+    private static final Ketting INSTANCE = new Ketting();
     private static String mcVersion;
 
-    public static void init(String mcVersion) {
+    private final Map<String, ForgeAdapter> AVAILABLE_ADAPTERS = new HashMap<>();
+
+    public static Ketting init(String mcVersion) {
+        if (Ketting.mcVersion != null)
+            throw new RuntimeException("Ketting is already initialized");
+
         Ketting.mcVersion = mcVersion;
+        return getInstance();
+    }
+
+    public static Ketting getInstance() {
+        return INSTANCE;
+    }
+
+    public static String getCoreVersion() {
+        return coreVersion;
+    }
+
+    public static String getMcVersion() {
+        return mcVersion;
+    }
+
+    public Ketting() {
+        LOGGER.info("KettingCore " + coreVersion + " for Minecraft " + mcVersion + " initializing...");
         collectAdapters();
 
         InjectProtect.init();
     }
 
-    private static void collectAdapters() {
+    public @NotNull ForgeAdapter getAdapter() {
+        ForgeAdapter adapter = AVAILABLE_ADAPTERS.get(mcVersion);
+
+        if (adapter == null)
+            throw new RuntimeException("Could not find an adapter for Minecraft version " + mcVersion);
+
+        return adapter;
+    }
+
+    private void collectAdapters() {
         Reflections reflections = new Reflections("org.kettingpowered.adapters");
 
         reflections.getSubTypesOf(ForgeAdapter.class).forEach(clazz -> {
@@ -38,14 +68,5 @@ public final class Ketting {
                 LOGGER.error("Could not instantiate adapter " + clazz.getName(), e);
             }
         });
-    }
-
-    public static @NotNull ForgeAdapter getAdapter() {
-        ForgeAdapter adapter = AVAILABLE_ADAPTERS.get(mcVersion);
-
-        if (adapter == null)
-            throw new RuntimeException("Could not find an adapter for Minecraft version " + mcVersion);
-
-        return adapter;
     }
 }

@@ -32,3 +32,17 @@ dependencies {
     implementation 'org.spongepowered:mixin:0.8.5'
     implementation 'org.reflections:reflections:0.10.2'
 }
+
+jar {
+    archiveFileName = 'KettingCore.jar'
+
+    manifest {
+        attributes 'Specification-Title': 'Kettingpowered',
+            'Specification-Vendor': 'Kettingpowered',
+            'Implementation-Title': 'KettingCore',
+            'Implementation-Version': versioning.info.build,
+            'Implementation-Vendor': 'Kettingpowered'
+    }
+
+    from subprojects.collect { it.sourceSets.main.output }
+}
