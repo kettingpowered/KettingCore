@@ -13,7 +13,7 @@ public final class Ketting {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Ketting.class);
     private static final String coreVersion = Ketting.class.getPackage().getImplementationVersion();
-    private static final Ketting INSTANCE = new Ketting();
+    private static Ketting INSTANCE;
     private static String mcVersion;
 
     private final List<ForgeAdapter> AVAILABLE_ADAPTERS = new ArrayList<>();
@@ -27,6 +27,8 @@ public final class Ketting {
     }
 
     public static Ketting getInstance() {
+        if (INSTANCE == null)
+            INSTANCE = new Ketting();
         return INSTANCE;
     }
 
