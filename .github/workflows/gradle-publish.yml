@@ -1,0 +1,72 @@
+name: Gradle Package
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2.9.0
+        with:
+          arguments: build
+
+      - name: Generate Release Hash
+        id: hash
+        run: echo "$(git rev-parse --short HEAD)" > hash.env
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: jar
+          path: build/libs/KettingCore.jar
+
+      - name: Upload Hash
+        uses: actions/upload-artifact@v3
+        with:
+          name: hash
+          path: hash.env
+
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: jar
+          path: tmp
+
+      - name: Download Hash
+        uses: actions/download-artifact@v3
+        with:
+          name: hash
+          path: tmp
+
+      - name: Create Release
+        run: |
+          tag=$(cat tmp/hash.env)
+          gh release create "$tag" tmp/KettingCore.jar \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
