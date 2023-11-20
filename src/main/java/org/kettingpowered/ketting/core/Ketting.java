@@ -1,6 +1,7 @@
 package org.kettingpowered.ketting.core;
 
 import org.jetbrains.annotations.NotNull;
+import org.kettingpowered.ketting.adapter.DimensionRegistry;
 import org.kettingpowered.ketting.adapter.ForgeAdapter;
 import org.kettingpowered.ketting.core.injectprotect.InjectProtect;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ public final class Ketting {
     private static String mcVersion;
 
     private final List<ForgeAdapter> AVAILABLE_ADAPTERS = new ArrayList<>();
+    private final List<DimensionRegistry<?>> AVAILABLE_DIMENSION_REGISTRIES = new ArrayList<>();
 
     public static Ketting init(String mcVersion) {
         if (Ketting.mcVersion != null)
@@ -58,5 +60,21 @@ public final class Ketting {
             throw new RuntimeException("Could not find an adapter for Minecraft version " + mcVersion);
 
         return adapter;
+    }
+
+    public <T> void registerDimensionRegistry(DimensionRegistry<T> registry) {
+        registry.createDefaults();
+        AVAILABLE_DIMENSION_REGISTRIES.add(registry);
+    }
+
+    public @NotNull DimensionRegistry getDimensionRegistry() {
+        DimensionRegistry registry = AVAILABLE_DIMENSION_REGISTRIES.stream()
+                .filter(reg -> reg.getMcVersion().equals(mcVersion))
+                .findFirst().orElse(null);
+
+        if (registry == null)
+            throw new RuntimeException("Could not find a dimension registry for Minecraft version " + mcVersion);
+
+        return registry;
     }
 }
