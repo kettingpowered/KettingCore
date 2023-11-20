@@ -18,7 +18,7 @@ public final class Ketting {
     private static String mcVersion;
 
     private final List<ForgeAdapter> AVAILABLE_ADAPTERS = new ArrayList<>();
-    private final List<DimensionRegistry<?>> AVAILABLE_DIMENSION_REGISTRIES = new ArrayList<>();
+    private final List<DimensionRegistry> AVAILABLE_DIMENSION_REGISTRIES = new ArrayList<>();
 
     public static Ketting init(String mcVersion) {
         if (Ketting.mcVersion != null)
@@ -62,7 +62,7 @@ public final class Ketting {
         return adapter;
     }
 
-    public <T> void registerDimensionRegistry(DimensionRegistry<T> registry) {
+    public <T, K, V> void registerDimensionRegistry(DimensionRegistry<T, K, V> registry) {
         registry.createDefaults();
         AVAILABLE_DIMENSION_REGISTRIES.add(registry);
     }
