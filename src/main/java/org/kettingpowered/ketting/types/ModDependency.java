@@ -5,13 +5,18 @@ public record ModDependency(
         String versionRange,
         boolean mandatory,
         Ordering loadOrder,
-        Mod.Side logicalSide,
+        Side logicalSide,
         Mod owner
 ) {
-
     public enum Ordering {
         BEFORE,
         AFTER,
         NONE
+    }
+
+    public enum Side {
+        CLIENT,
+        SERVER,
+        UNIVERSAL
     }
 }

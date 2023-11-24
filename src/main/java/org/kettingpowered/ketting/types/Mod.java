@@ -8,13 +8,5 @@ public record Mod(
         String displayName,
         String version,
         boolean active,
-        Side logicalSide,
         List<ModDependency> dependencies
-) {
-
-    public enum Side {
-        CLIENT,
-        SERVER,
-        UNIVERSAL
-    }
-}
+) {}
