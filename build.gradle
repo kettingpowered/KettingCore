@@ -125,7 +125,7 @@ publishing {
     }
     repositories {
        maven {
-            url = uri("https://maven.pkg.github.com/C0D3-M4513R/KettingCore")
+            url = uri("https://maven.pkg.github.com/kettingpowered/KettingCore")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("GHUSERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("GHTOKEN")
