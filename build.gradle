@@ -39,7 +39,7 @@ jar {
         attributes 'Specification-Title': 'Kettingpowered',
             'Specification-Vendor': 'Kettingpowered',
             'Implementation-Title': 'KettingCore',
-            'Implementation-Version': System.getenv("VERSION"),
+            'Implementation-Version': System.getenv("VERSION") ?: 'dev-ver',
             'Implementation-Vendor': 'Kettingpowered'
     }
 
