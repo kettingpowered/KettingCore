@@ -57,7 +57,7 @@ publishing {
         artifact sourceJar
         artifact jar
         groupId = "org.kettingpowered"
-        artifactID = "kettingcore"
+        artifactId = "kettingcore"
         version = System.getenv("VERSION")
         pom {
           name = "KettingCore"
