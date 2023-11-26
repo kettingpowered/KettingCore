@@ -8,6 +8,7 @@ group = 'org.kettingpowered'
 allprojects {
     apply plugin: 'java-library'
     apply plugin: 'net.nemerosa.versioning'
+    apply plugin: 'maven-publish'
 
     repositories {
         maven {
@@ -43,4 +44,61 @@ jar {
     }
 
     from subprojects.collect { it.sourceSets.main.output }
+}
+task sourceJar(type: Jar) {
+  archiveClassifier = "sources"
+}
+
+
+publishing {
+    publications {
+      myPublication(MavenPublication) {
+        from components.java
+        artifact sourceJar
+        artifact jar
+        groupId = "org.kettingpowered"
+        artifactID = "kettingcore"
+        version = System.getenv("VERSION")
+        pom {
+          name = "KettingCore"
+          description = "An API supported across all Ketting Versions"
+          url = "https://github.com/kettingpowered/KettingCore"
+          licenses {
+            license {
+              name = "MIT License"
+              url = "http://www.opensource.org/licenses/mit-license.php"
+            }
+          }
+          developers {
+            developer {
+              id = "justred23"
+              name = "JustRed23"
+              //email = "jon@doe"
+            }
+          }
+          scm {
+            connection = "scm:git:https://github.com/kettingpowered/KettingCore.git"
+            //developerConnection = "scm:svn:https://subversion.example.com/svn/project/trunk/"
+            url = "https://github.com/kettingpowered/KettingCore"
+          }
+        }
+      }
+    }
+    repositories {
+       maven {
+            url = uri("https://maven.pkg.github.com/kettingpowered/KettingCore")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GHUSERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GHTOKEN")
+            }
+       }
+        maven {
+            name = 'kettingRepo'
+            credentials {
+                username = System.getenv("KETTINGUSERNAME")
+                password = System.getenv("KETTINGPASSWORD")
+            }
+            url = "https://nexus.c0d3m4513r.com/repository/Ketting/"
+        }
+    }
 }
