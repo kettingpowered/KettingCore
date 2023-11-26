@@ -25,19 +25,6 @@ allprojects {
         implementation 'org.jetbrains:annotations:24.0.0'
     }
 }
-project(':common') {
-    jar {
-        manifest {
-            attributes 'Specification-Title': 'Kettingpowered',
-                    'Specification-Vendor': 'Kettingpowered',
-                    'Implementation-Title': 'KettingCore',
-                    'Implementation-Version': System.getenv("VERSION") ?: versioning.info.build,
-                    'Implementation-Vendor': 'Kettingpowered'
-        }
-
-        from subprojects.collect { it.sourceSets.main.output }
-    }
-}
 
 dependencies {
     api 'org.slf4j:slf4j-api:1.8.0-beta4'
