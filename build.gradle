@@ -45,8 +45,16 @@ jar {
 
     from subprojects.collect { it.sourceSets.main.output }
 }
-task sourceJar(type: Jar) {
-  archiveClassifier = "sources"
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
 
@@ -54,9 +62,9 @@ publishing {
     publications {
       myPublication(MavenPublication) {
         from components.java
-        artifact sourceJar
+        artifact sourcesJar
+        artifact javadocJar
         artifact jar
-        artifact source: sourceJar, classifier: 'src', extension: 'zip'
         groupId = "org.kettingpowered"
         artifactId = "kettingcore"
         version = System.getenv("VERSION")
