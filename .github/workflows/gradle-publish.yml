@@ -1,7 +1,12 @@
 name: Gradle Package
 
 on:
-  push
+  push:
+    branches: [main]
+    tags:
+      - v*
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -18,7 +23,8 @@ jobs:
           distribution: 'temurin'
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
-
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2.9.0
         with:
@@ -61,6 +67,15 @@ jobs:
           name: hash
           path: tmp
 
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2.9.0
+        with:
+          arguments: publish
+        env:
+          KETTINGUSERNAME: ${{ secrets.KETTINGUSERNAME }}
+          KETTINGPASSWORD: ${{ secrets.KETTINGPASSWORD }}
       - name: Create Release
         run: |
           tag=$(cat tmp/hash.env)
