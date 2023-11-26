@@ -3,6 +3,7 @@ plugins {
     id 'net.nemerosa.versioning' version '3.0.0'
 }
 
+apply plugin: 'maven-publish'
 group = 'org.kettingpowered'
 
 allprojects {
@@ -32,15 +33,98 @@ dependencies {
 }
 
 jar {
-    archiveFileName = 'KettingCore.jar'
-
+    //archiveFileName = 'KettingCore.jar'
+    
     manifest {
         attributes 'Specification-Title': 'Kettingpowered',
             'Specification-Vendor': 'Kettingpowered',
             'Implementation-Title': 'KettingCore',
-            'Implementation-Version': versioning.info.build,
+            'Implementation-Version': System.getenv("VERSION"),
             'Implementation-Vendor': 'Kettingpowered'
     }
 
     from subprojects.collect { it.sourceSets.main.output }
+}
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+
+publishing {
+    publications {
+      myPublication(MavenPublication) {
+        from components.java
+        artifact(sourcesJar) {
+            // These values will be used instead of the values from the task. The task values will not be updated.
+            classifier "sources"
+            extension "jar"
+        }
+        artifact(javadocJar) {
+             //These values will be used instead of the values from the task. The task values will not be updated.
+            classifier "javadoc"
+            extension "jar"
+        }
+//        artifact jar
+//        groupId = "org.kettingpowered"
+//        artifactId = "kettingcore"
+        version = System.getenv("VERSION")
+        pom {
+          name = "KettingCore"
+          description = "An API supported across all Ketting Versions"
+          url = "https://github.com/kettingpowered/KettingCore"
+          licenses {
+            license {
+              name = "MIT License"
+              url = "http://www.opensource.org/licenses/mit-license.php"
+            }
+          }
+          developers {
+            developer {
+              id = "justred23"
+              name = "JustRed23"
+              //email = "jon@doe"
+            }
+          }
+          scm {
+            connection = "scm:git:https://github.com/kettingpowered/KettingCore.git"
+            //developerConnection = "scm:svn:https://subversion.example.com/svn/project/trunk/"
+            url = "https://github.com/kettingpowered/KettingCore"
+          }
+        }
+          pom.withXml {
+              Node pomNode = asNode()
+              pomNode.dependencies.'*'.findAll() {
+                  it.artifactId.text() == 'common'
+              }.each() {
+                  it.parent().remove(it)
+              }
+          }
+
+      }
+    }
+    repositories {
+       maven {
+            url = uri("https://maven.pkg.github.com/kettingpowered/KettingCore")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GHUSERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GHTOKEN")
+            }
+       }
+        maven {
+            name = 'kettingRepo'
+            credentials {
+                username = System.getenv("KETTINGUSERNAME")
+                password = System.getenv("KETTINGPASSWORD")
+            }
+            url = "https://nexus.c0d3m4513r.com/repository/Ketting/"
+        }
+    }
 }
