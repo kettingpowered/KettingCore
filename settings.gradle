@@ -8,7 +8,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'KettingCore'
+rootProject.name = 'kettingcore'
 
 include 'common'
 include 'forge'

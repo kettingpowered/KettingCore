@@ -112,6 +112,7 @@ publishing {
     }
     repositories {
        maven {
+            name = "Github Packages"
             url = uri("https://maven.pkg.github.com/kettingpowered/KettingCore")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
