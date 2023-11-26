@@ -50,7 +50,7 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref_type == 'tag'
     permissions:
       contents: write
 
@@ -66,7 +66,10 @@ jobs:
         with:
           name: hash
           path: tmp
-
+      - name: Get Version Name
+        id: version_name
+        run: |
+         echo version=${GITHUB_REF#refs/tags/v} >> $GITHUB_OUTPUT
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Build with Gradle
@@ -76,6 +79,7 @@ jobs:
         env:
           KETTINGUSERNAME: ${{ secrets.KETTINGUSERNAME }}
           KETTINGPASSWORD: ${{ secrets.KETTINGPASSWORD }}
+          VERSION: ${{ steps.version_name.outputs.version }}
       - name: Create Release
         run: |
           tag=$(cat tmp/hash.env)
