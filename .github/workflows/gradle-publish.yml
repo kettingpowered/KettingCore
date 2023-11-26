@@ -96,10 +96,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
         run: |
-          tag=$(cat tmp/hash.env)
-          gh release create "$tag" tmp/kettingcore*.jar \
+          gh release create "v$VERSION" tmp/kettingcore*.jar \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --title="${GITHUB_REPOSITORY#*/} v$VERSION" \
               --generate-notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version_name.outputs.version }}
