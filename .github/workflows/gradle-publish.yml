@@ -93,6 +93,7 @@ jobs:
           KETTINGUSERNAME: ${{ secrets.KETTINGUSERNAME }}
           KETTINGPASSWORD: ${{ secrets.KETTINGPASSWORD }}
           VERSION: ${{ steps.version_name.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
         run: |
           tag=$(cat tmp/hash.env)
