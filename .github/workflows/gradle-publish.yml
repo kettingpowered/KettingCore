@@ -57,6 +57,7 @@ jobs:
     if: github.ref_type == 'tag'
     permissions:
       contents: write
+      packages: write
 
     steps:
       - uses: actions/checkout@v3
