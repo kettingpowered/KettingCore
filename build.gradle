@@ -28,7 +28,6 @@ allprojects {
 
 dependencies {
     api 'org.slf4j:slf4j-api:1.8.0-beta4'
-    implementation project(':common')
     implementation 'org.spongepowered:mixin:0.8.5'
 }
 
@@ -99,15 +98,6 @@ publishing {
             url = "https://github.com/kettingpowered/KettingCore"
           }
         }
-          pom.withXml {
-              Node pomNode = asNode()
-              pomNode.dependencies.'*'.findAll() {
-                  it.artifactId.text() == 'common'
-              }.each() {
-                  it.parent().remove(it)
-              }
-          }
-
       }
     }
     repositories {
