@@ -3,12 +3,12 @@ plugins {
     id 'net.nemerosa.versioning' version '3.0.0'
 }
 
+apply plugin: 'maven-publish'
 group = 'org.kettingpowered'
 
 allprojects {
     apply plugin: 'java-library'
     apply plugin: 'net.nemerosa.versioning'
-    apply plugin: 'maven-publish'
 
     repositories {
         maven {
@@ -25,6 +25,19 @@ allprojects {
         implementation 'org.jetbrains:annotations:24.0.0'
     }
 }
+project(':common') {
+    jar {
+        manifest {
+            attributes 'Specification-Title': 'Kettingpowered',
+                    'Specification-Vendor': 'Kettingpowered',
+                    'Implementation-Title': 'KettingCore',
+                    'Implementation-Version': System.getenv("VERSION") ?: versioning.info.build,
+                    'Implementation-Vendor': 'Kettingpowered'
+        }
+
+        from subprojects.collect { it.sourceSets.main.output }
+    }
+}
 
 dependencies {
     api 'org.slf4j:slf4j-api:1.8.0-beta4'
@@ -33,13 +46,13 @@ dependencies {
 }
 
 jar {
-    archiveFileName = 'KettingCore.jar'
+    //archiveFileName = 'KettingCore.jar'
     
     manifest {
         attributes 'Specification-Title': 'Kettingpowered',
             'Specification-Vendor': 'Kettingpowered',
             'Implementation-Title': 'KettingCore',
-            'Implementation-Version': versioning.info.build,
+            'Implementation-Version': System.getenv("VERSION") ?: versioning.info.build,
             'Implementation-Vendor': 'Kettingpowered'
     }
 
@@ -68,13 +81,13 @@ publishing {
             extension "jar"
         }
         artifact(javadocJar) {
-            // These values will be used instead of the values from the task. The task values will not be updated.
+             //These values will be used instead of the values from the task. The task values will not be updated.
             classifier "javadoc"
             extension "jar"
         }
-        artifact jar
-        groupId = "org.kettingpowered"
-        artifactId = "kettingcore"
+//        artifact jar
+//        groupId = "org.kettingpowered"
+//        artifactId = "kettingcore"
         version = System.getenv("VERSION")
         pom {
           name = "KettingCore"
@@ -99,6 +112,15 @@ publishing {
             url = "https://github.com/kettingpowered/KettingCore"
           }
         }
+          pom.withXml {
+              Node pomNode = asNode()
+              pomNode.dependencies.'*'.findAll() {
+                  it.artifactId.text() == 'common'
+              }.each() {
+                  it.parent().remove(it)
+              }
+          }
+
       }
     }
     repositories {
