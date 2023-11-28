@@ -6,9 +6,7 @@ import org.kettingpowered.ketting.types.Mod;
 
 import java.util.List;
 
-public interface ForgeAdapter {
-
-    String getMcVersion();
+public interface ForgeAdapter extends SharedConstants {
 
     @Nullable Mod getMod(String modID);
     @Nullable List<Mod> getMods();
