@@ -84,6 +84,6 @@ public class InjectionProcessor {
         if (modid == null)
             return null;
 
-        return Ketting.getInstance().getForgeAdapter().getModName(modid);
+        return Ketting.getInstance().getForgeAdapter().map(adapter -> adapter.getModName(modid)).orElse(null);
     }
 }

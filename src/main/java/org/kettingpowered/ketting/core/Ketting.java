@@ -1,18 +1,16 @@
 package org.kettingpowered.ketting.core;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.kettingpowered.ketting.adapter.BukkitAdapter;
 import org.kettingpowered.ketting.adapter.DimensionRegistry;
 import org.kettingpowered.ketting.adapter.ForgeAdapter;
-import org.kettingpowered.ketting.adapter.noop.NOOPBukkitAdapter;
-import org.kettingpowered.ketting.adapter.noop.NOOPForgeAdapter;
 import org.kettingpowered.ketting.core.injectprotect.InjectProtect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class Ketting {
 
@@ -28,7 +26,7 @@ public final class Ketting {
     /**
      * <b>Should only be called by the server implementation</b>
      */
-    public static Ketting init(String mcVersion) {
+    public static Ketting init(@NotNull String mcVersion) {
         if (isInitialized())
             throw new RuntimeException("Ketting is already initialized");
 
@@ -59,9 +57,14 @@ public final class Ketting {
         InjectProtect.init();
     }
 
-    public void registerAdapter(ForgeAdapter adapter, BukkitAdapter bukkitAdapter) {
+    public void registerAdapter(@NotNull ForgeAdapter adapter, @NotNull BukkitAdapter bukkitAdapter) {
         AVAILABLE_FORGE_ADAPTERS.add(adapter);
         AVAILABLE_BUKKIT_ADAPTERS.add(bukkitAdapter);
+    }
+
+    public <T, K, V> void registerDimensionRegistry(DimensionRegistry<T, K, V> registry) {
+        registry.createDefaults();
+        AVAILABLE_DIMENSION_REGISTRIES.add(registry);
     }
 
     /**
@@ -74,45 +77,41 @@ public final class Ketting {
         AVAILABLE_BUKKIT_ADAPTERS.forEach(BukkitAdapter::reload);
     }
 
-    public @NotNull ForgeAdapter getForgeAdapter() {
-        ForgeAdapter adapter = AVAILABLE_FORGE_ADAPTERS.stream()
+    /**
+     * @return The first available Forge adapter for the current Minecraft version, or {@link Optional#empty()} if none is found.
+     * @see #getBukkitAdapter()
+     * @see #registerAdapter(ForgeAdapter, BukkitAdapter)
+     */
+    public @NotNull Optional<ForgeAdapter> getForgeAdapter() {
+        Optional<ForgeAdapter> optional = AVAILABLE_FORGE_ADAPTERS.stream()
                 .filter(adptr -> adptr.getMcVersion().equals(mcVersion))
-                .findFirst().orElse(null);
-
-        if (adapter == null) {
-            LOGGER.error("Could not find a valid Forge adapter for Minecraft version " + mcVersion);
-            return NOOPForgeAdapter.INSTANCE;
-        }
-
-        return adapter;
+                .findFirst();
+        if (optional.isEmpty()) LOGGER.error("Could not find a valid Forge adapter for Minecraft version " + mcVersion);
+        return optional;
     }
 
-    public @NotNull BukkitAdapter getBukkitAdapter() {
-        BukkitAdapter adapter = AVAILABLE_BUKKIT_ADAPTERS.stream()
+    /**
+     * @return The first available Bukkit adapter for the current Minecraft version, or {@link Optional#empty()} if none is found.
+     * @see #getForgeAdapter()
+     * @see #registerAdapter(ForgeAdapter, BukkitAdapter)
+     */
+    public @NotNull Optional<BukkitAdapter> getBukkitAdapter() {
+        Optional<BukkitAdapter> optional = AVAILABLE_BUKKIT_ADAPTERS.stream()
                 .filter(adptr -> adptr.getMcVersion().equals(mcVersion))
-                .findFirst().orElse(null);
-
-        if (adapter == null) {
-            LOGGER.error("Could not find a valid Bukkit adapter for Minecraft version " + mcVersion);
-            return NOOPBukkitAdapter.INSTANCE;
-        }
-
-        return adapter;
+                .findFirst();
+        if (optional.isEmpty()) LOGGER.error("Could not find a valid Bukkit adapter for Minecraft version " + mcVersion);
+        return optional;
     }
 
-    public <T, K, V> void registerDimensionRegistry(DimensionRegistry<T, K, V> registry) {
-        registry.createDefaults();
-        AVAILABLE_DIMENSION_REGISTRIES.add(registry);
-    }
-
-    public @NotNull DimensionRegistry getDimensionRegistry() {
-        DimensionRegistry registry = AVAILABLE_DIMENSION_REGISTRIES.stream()
+    /**
+     * @return The first available dimension registry for the current Minecraft version, or {@link Optional#empty()} if none is found.
+     * @see #registerDimensionRegistry(DimensionRegistry)
+     */
+    public @NotNull Optional<DimensionRegistry> getDimensionRegistry() {
+        Optional<DimensionRegistry> optional = AVAILABLE_DIMENSION_REGISTRIES.stream()
                 .filter(reg -> reg.getMcVersion().equals(mcVersion))
-                .findFirst().orElse(null);
-
-        if (registry == null)
-            throw new RuntimeException("Could not find a dimension registry for Minecraft version " + mcVersion);
-
-        return registry;
+                .findFirst();
+        if (optional.isEmpty()) LOGGER.error("Could not find a valid dimension registry for Minecraft version " + mcVersion);
+        return optional;
     }
 }
