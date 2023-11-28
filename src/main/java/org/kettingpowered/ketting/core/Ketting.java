@@ -57,9 +57,17 @@ public final class Ketting {
         InjectProtect.init();
     }
 
-    public void registerAdapter(@NotNull ForgeAdapter adapter, @NotNull BukkitAdapter bukkitAdapter) {
+    public void registerAdapter(@NotNull ForgeAdapter forgeAdapter, @NotNull BukkitAdapter bukkitAdapter) {
+        registerForgeAdapter(forgeAdapter);
+        registerBukkitAdapter(bukkitAdapter);
+    }
+
+    public void registerForgeAdapter(@NotNull ForgeAdapter adapter) {
         AVAILABLE_FORGE_ADAPTERS.add(adapter);
-        AVAILABLE_BUKKIT_ADAPTERS.add(bukkitAdapter);
+    }
+
+    public void registerBukkitAdapter(@NotNull BukkitAdapter adapter) {
+        AVAILABLE_BUKKIT_ADAPTERS.add(adapter);
     }
 
     public <T, K, V> void registerDimensionRegistry(DimensionRegistry<T, K, V> registry) {
