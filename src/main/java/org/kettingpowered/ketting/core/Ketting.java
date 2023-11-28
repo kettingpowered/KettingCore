@@ -26,7 +26,7 @@ public final class Ketting {
     private final List<DimensionRegistry> AVAILABLE_DIMENSION_REGISTRIES = new ArrayList<>();
 
     /**
-     * Should only be called by the server implementation
+     * <b>Should only be called by the server implementation</b>
      */
     public static Ketting init(String mcVersion) {
         if (isInitialized())
@@ -62,6 +62,16 @@ public final class Ketting {
     public void registerAdapter(ForgeAdapter adapter, BukkitAdapter bukkitAdapter) {
         AVAILABLE_FORGE_ADAPTERS.add(adapter);
         AVAILABLE_BUKKIT_ADAPTERS.add(bukkitAdapter);
+    }
+
+    /**
+     * Reloads all adapters, clearing all caches.
+     * <br>
+     * <b>Should only be called by the server implementation</b>
+     */
+    public void reload() {
+        AVAILABLE_FORGE_ADAPTERS.forEach(ForgeAdapter::reload);
+        AVAILABLE_BUKKIT_ADAPTERS.forEach(BukkitAdapter::reload);
     }
 
     public @NotNull ForgeAdapter getForgeAdapter() {

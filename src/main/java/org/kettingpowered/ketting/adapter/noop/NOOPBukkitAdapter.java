@@ -16,6 +16,8 @@ public class NOOPBukkitAdapter implements BukkitAdapter {
         return null;
     }
 
+    public void reload() {}
+
     public @Nullable Plugin getPlugin(String name) {
         return null;
     }

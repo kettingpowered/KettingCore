@@ -15,6 +15,8 @@ public class NOOPForgeAdapter implements ForgeAdapter {
         return null;
     }
 
+    public void reload() {}
+
     public @Nullable Mod getMod(String modID) {
         return null;
     }
