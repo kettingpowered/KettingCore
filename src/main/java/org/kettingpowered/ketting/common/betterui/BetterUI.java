@@ -31,7 +31,7 @@ public class BetterUI {
             "                                                     \\______/     "
     };
 
-    private static String name;
+    public static String name;
 
     public static void printTitle(String name, String brand, String javaVersion, String version, String bukkitVersion, String forgeVersion) {
         BetterUI.name = name;
