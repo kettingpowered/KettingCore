@@ -8,7 +8,7 @@ public final class GUIColors {
 
         public static final class ChatColors {
             public static Color DEFAULT = CONSOLE_FOREGROUND;
-            public static Color INFO = new Color(0x008000);
+            public static Color INFO = new Color(0x009900);
             public static Color WARN = new Color(0xFFA500);
             public static Color ERROR = new Color(0xFF0000);
             public static Color FATAL = new Color(0x990000);
