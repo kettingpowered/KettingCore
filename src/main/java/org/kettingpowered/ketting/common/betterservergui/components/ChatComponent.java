@@ -2,12 +2,12 @@ package org.kettingpowered.ketting.common.betterservergui.components;
 
 import org.kettingpowered.ketting.common.betterservergui.BetterServerGUI;
 import org.kettingpowered.ketting.common.betterservergui.GUIColors;
+import org.kettingpowered.ketting.common.betterservergui.components.chat.LoggerDocument;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ChatComponent extends JPanel {
 
     private final BetterServerGUI instance;
-    private final JTextArea textArea;
+    private final JTextPane textPane;
 
     private final List<String> commandHistory = new ArrayList<>();
     private int commandHistoryIndex = 0;
@@ -27,10 +27,10 @@ public class ChatComponent extends JPanel {
         this.instance = instance;
         setLayout(new BorderLayout());
 
-        textArea = new JTextArea();
-        textArea.setEditable(false);
-        textArea.setFont(instance.getSettings().font);
-        JScrollPane scrollPane = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setFont(instance.getSettings().font.deriveFont(Font.BOLD));
+        JScrollPane scrollPane = new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         JTextField textField = new JTextField();
         textField.setFont(instance.getSettings().font);
@@ -64,10 +64,10 @@ public class ChatComponent extends JPanel {
         setBackground(GUIColors.ChatComponent.BACKGROUND);
         setForeground(GUIColors.ChatComponent.FOREGROUND);
 
-        textArea.setBackground(GUIColors.ChatComponent.CONSOLE_BACKGROUND);
-        textArea.setForeground(GUIColors.ChatComponent.CONSOLE_FOREGROUND);
-        scrollPane.setBackground(textArea.getBackground());
-        scrollPane.setForeground(textArea.getForeground());
+        textPane.setBackground(GUIColors.ChatComponent.CONSOLE_BACKGROUND);
+        textPane.setForeground(GUIColors.ChatComponent.CONSOLE_FOREGROUND);
+        scrollPane.setBackground(textPane.getBackground());
+        scrollPane.setForeground(textPane.getForeground());
 
         textField.setBackground(GUIColors.ChatComponent.INPUT_BACKGROUND);
         textField.setForeground(GUIColors.ChatComponent.INPUT_FOREGROUND);
@@ -87,7 +87,7 @@ public class ChatComponent extends JPanel {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> this.print(message));
         } else {
-            Document document = textArea.getDocument();
+            LoggerDocument document = LoggerDocument.create(textPane.getStyledDocument());
             try {
                 document.insertString(document.getLength(), ANSI.matcher(message).replaceAll(""), null);
             } catch (BadLocationException ignored) {}

@@ -5,6 +5,15 @@ import java.awt.*;
 public final class GUIColors {
 
     public static final class ChatComponent {
+
+        public static final class ChatColors {
+            public static Color DEFAULT = CONSOLE_FOREGROUND;
+            public static Color INFO = new Color(0x008000);
+            public static Color WARN = new Color(0xFFA500);
+            public static Color ERROR = new Color(0xFF0000);
+            public static Color FATAL = new Color(0x990000);
+        }
+
         public static Color BACKGROUND = new Color(0x282C34);
         public static Color FOREGROUND = new Color(0xFFFFFF);
         public static Color BORDER = new Color(0xBEBEBE);
