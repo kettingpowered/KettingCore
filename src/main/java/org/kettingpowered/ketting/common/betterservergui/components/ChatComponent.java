@@ -84,6 +84,7 @@ public class ChatComponent extends JPanel {
 
     private static final java.util.regex.Pattern ANSI = java.util.regex.Pattern.compile("\\x1B\\[([0-9]{1,2}(;[0-9]{1,2})*)?[m|K]");
     public void print(String message) {
+        if (instance.isClosing()) return;
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> this.print(message));
         } else {

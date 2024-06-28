@@ -152,6 +152,10 @@ public final class BetterServerGUI extends JComponent {
         }
     }
 
+    public boolean isClosing() {
+        return this.isClosing.get();
+    }
+    
     private void runFinalizers() {
         settings.finalizers.forEach(Runnable::run);
     }
