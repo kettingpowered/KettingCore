@@ -18,7 +18,6 @@ repositories {
 }
 
 dependencies {
-    api 'net.fabricmc:mapping-io:0.6.1'
     api 'org.slf4j:slf4j-api:1.8.0-beta4'
     implementation 'org.spongepowered:mixin:0.8.5'
     implementation 'org.jetbrains:annotations:24.0.0'
