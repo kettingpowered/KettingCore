@@ -6,34 +6,25 @@ plugins {
 apply plugin: 'maven-publish'
 group = 'org.kettingpowered'
 
-allprojects {
-    apply plugin: 'java-library'
-    apply plugin: 'net.nemerosa.versioning'
-
-    repositories {
-        maven {
-            name 'c0d3m4513r'
-            url 'https://nexus.c0d3m4513r.com/repository/Magma/'
-        }
-        maven {
-            name 'MinecraftForge'
-            url 'https://maven.minecraftforge.net/'
-        }
+repositories {
+    maven {
+        name 'c0d3m4513r'
+        url 'https://reposilite.c0d3m4513r.com/Forge'
     }
-
-    dependencies {
-        implementation 'org.jetbrains:annotations:24.0.0'
+    maven {
+        name 'MinecraftForge'
+        url 'https://maven.minecraftforge.net/'
     }
 }
 
 dependencies {
+    api 'net.fabricmc:mapping-io:0.6.1'
     api 'org.slf4j:slf4j-api:1.8.0-beta4'
     implementation 'org.spongepowered:mixin:0.8.5'
+    implementation 'org.jetbrains:annotations:24.0.0'
 }
 
 jar {
-    //archiveFileName = 'KettingCore.jar'
-    
     manifest {
         attributes 'Specification-Title': 'Kettingpowered',
             'Specification-Vendor': 'Kettingpowered',
@@ -41,10 +32,7 @@ jar {
             'Implementation-Version': System.getenv("VERSION") ?: 'dev-ver',
             'Implementation-Vendor': 'Kettingpowered'
     }
-
-    from subprojects.collect { it.sourceSets.main.output }
 }
-
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     archiveClassifier = 'sources'
@@ -56,24 +44,19 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-
 publishing {
     publications {
       myPublication(MavenPublication) {
         from components.java
         artifact(sourcesJar) {
-            // These values will be used instead of the values from the task. The task values will not be updated.
             classifier "sources"
             extension "jar"
         }
         artifact(javadocJar) {
-             //These values will be used instead of the values from the task. The task values will not be updated.
             classifier "javadoc"
             extension "jar"
         }
-//        artifact jar
-//        groupId = "org.kettingpowered"
-//        artifactId = "kettingcore"
+
         version = System.getenv("VERSION")
         pom {
           name = "KettingCore"
@@ -89,12 +72,10 @@ publishing {
             developer {
               id = "justred23"
               name = "JustRed23"
-              //email = "jon@doe"
             }
           }
           scm {
             connection = "scm:git:https://github.com/kettingpowered/KettingCore.git"
-            //developerConnection = "scm:svn:https://subversion.example.com/svn/project/trunk/"
             url = "https://github.com/kettingpowered/KettingCore"
           }
         }
@@ -115,7 +96,7 @@ publishing {
                 username = System.getenv("KETTINGUSERNAME")
                 password = System.getenv("KETTINGPASSWORD")
             }
-            url = "https://nexus.c0d3m4513r.com/repository/Ketting/"
+            url = "https://reposilite.c0d3m4513r.com/Ketting/"
         }
     }
 }
