@@ -14,6 +14,7 @@ public class StacktraceDeobfuscator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StacktraceDeobfuscator.class);
     private static MappingLoader mappingLoader;
+    private static ClassLoader serverClassLoader;
 
     private static boolean enabled;
 
@@ -24,7 +25,7 @@ public class StacktraceDeobfuscator {
         }
     });
 
-    public static void init(File mojmap, Map<String, String> bukkitMethods) {
+    public static void init(File mojmap, Map<String, String> bukkitMethods, ClassLoader serverClassLoader) {
         if (mappingLoader != null) return;
 
         try {
@@ -33,6 +34,8 @@ public class StacktraceDeobfuscator {
             LOGGER.error("Failed to load mappings", e);
             return;
         }
+
+        StacktraceDeobfuscator.serverClassLoader = serverClassLoader;
 
         int mojmapSize = mappingLoader.mappings.size();
         int bukkitSize = mappingLoader.bukkitMappings.values().stream().mapToInt(List::size).sum();
@@ -71,7 +74,7 @@ public class StacktraceDeobfuscator {
 
             final Class<?> clazz;
             try {
-                clazz = Class.forName(className);
+                clazz = Class.forName(className, true, serverClassLoader);
             } catch (ClassNotFoundException e) {
                 LOGGER.error("Failed to find class for {}", className, e);
                 deobf[i] = element;
