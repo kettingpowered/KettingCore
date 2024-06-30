@@ -166,8 +166,7 @@ public class StacktraceDeobfuscator {
             }
         };
         try {
-            final @Nullable InputStream inputStream = StacktraceDeobfuscator.class.getClassLoader()
-                    .getResourceAsStream(key.getName().replace('.', '/') + ".class");
+            final @Nullable InputStream inputStream = serverClassLoader.getResourceAsStream(key.getName().replace('.', '/') + ".class");
             if (inputStream == null) {
                 throw new IllegalStateException("Could not find class file: " + key.getName());
             }
