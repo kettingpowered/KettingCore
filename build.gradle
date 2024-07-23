@@ -22,6 +22,14 @@ dependencies {
     api 'org.slf4j:slf4j-api:1.8.0-beta4'
     implementation 'org.spongepowered:mixin:0.8.5'
     implementation 'org.jetbrains:annotations:24.0.0'
+    implementation 'it.unimi.dsi:fastutil:8.5.12'
+
+    //ASM
+    implementation 'org.ow2.asm:asm:9.7'
+    implementation 'org.ow2.asm:asm-tree:9.7'
+    implementation 'org.ow2.asm:asm-util:9.7'
+    implementation 'org.ow2.asm:asm-commons:9.7'
+    implementation 'org.ow2.asm:asm-analysis:9.7'
 }
 
 jar {
