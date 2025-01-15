@@ -106,5 +106,13 @@ publishing {
             }
             url = "https://reposilite.c0d3m4513r.com/Ketting/"
         }
+        maven {
+            name = 'kettingRepo-backup'
+            credentials {
+                username = System.getenv("KETTINGUSERNAME")
+                password = System.getenv("KETTINGPASSWORD")
+            }
+            url = "https://repo.kettingpowered.org/Ketting/"
+        }
     }
 }
