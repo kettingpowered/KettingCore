@@ -30,7 +30,7 @@ public class InjectProtect {
     }
 
     public static void mixinInjectCaught(IMixinInfo info, Throwable t) {
-        LOGGER.warn("Caught mixin injection error!", t);
+        LOGGER.warn("Caught mixin injection error!", ShortenedStackTrace.findCause(t));
         errors.add(InjectSet.of(info, t));
     }
 
